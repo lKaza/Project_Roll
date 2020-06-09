@@ -31,12 +31,18 @@ public class Player : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other) {
+        print("dead af by trigger");
+    }
+
     private void ShipRotation(){
         float pitchDueToPosition = transform.localPosition.y * pitchFactor;
-        float pitchDueToRotation = VerticalThrow*controlPitchFactor;
+        float pitchDueToRotation = VerticalThrow*controlPitchFactor ;
+
         float pitch= pitchDueToPosition + pitchDueToRotation;
         float yaw= transform.localPosition.x * yawFactor;
         float roll= horizontalThrow*controlRollFactor;
+
         transform.localRotation = Quaternion.Euler(pitch,yaw,roll);
     }
 
@@ -46,6 +52,7 @@ public class Player : MonoBehaviour
         float xOffSet = velocity * Time.deltaTime * horizontalThrow;
         float rawNewXPos = xOffSet + transform.localPosition.x;
         float ClampedPosX = Mathf.Clamp(rawNewXPos, -xRange, xRange);
+
         transform.localPosition = new Vector3(ClampedPosX, transform.localPosition.y, transform.localPosition.z);
     }
      private void ShipMovementY()
@@ -54,6 +61,7 @@ public class Player : MonoBehaviour
         float yOffSet = velocity * Time.deltaTime * VerticalThrow;
         float rawNewYPos = yOffSet + transform.localPosition.y;
         float ClampedPosY = Mathf.Clamp(rawNewYPos, -yRange, yRange);
+
         transform.localPosition = new Vector3(transform.localPosition.x, ClampedPosY, transform.localPosition.z);
     }
 }
