@@ -4,7 +4,14 @@ using UnityEngine;
 public class MusicPlayer : MonoBehaviour
 {
     private void Awake(){
-        DontDestroyOnLoad(this.gameObject);
+
+        int numbMusicPlayers = FindObjectsOfType<MusicPlayer>().Length;
+        if( numbMusicPlayers>1){
+            Destroy(gameObject);
+        }else{
+            DontDestroyOnLoad(this.gameObject);
+        }
+        
     }   
    
     // Start is called before the first frame update

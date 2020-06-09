@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
    
    [SerializeField] float controlRollFactor = -50f;
    [SerializeField] float controlPitchFactor = -20f;
+
+        [Header("Particles")]
+  
    float horizontalThrow,VerticalThrow;
    private bool isAlive = true;
 
@@ -74,5 +77,6 @@ public class PlayerController : MonoBehaviour
     public void Dying(){
         print("shit thats all you had to say negro");
         isAlive = false;
+        
     }
 }
