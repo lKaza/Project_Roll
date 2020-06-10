@@ -29,7 +29,10 @@ public class PlayerController : MonoBehaviour
      public float doubleTapTime = 0.5f;
      // Time to wait between dashes
      public float dashWaitTime = 2.0f;
-     
+
+     private float _lastDashButtonTime;
+     // Time of the last dash
+     private float _lastDashTime;
    private bool isAlive = true;
 
 
@@ -48,12 +51,33 @@ public class PlayerController : MonoBehaviour
         ShipMovementX();
         ShipMovementY();
         ShipRotation();
+        ShipBarrelroll();
         ShipFiring();
         }
         
     }
 
-    
+    private void ShipBarrelroll()
+    {
+         if (isDashPossible && Input.GetKeyDown(KeyCode.D)) {
+             // If second time pressed?
+             if (Time.time - _lastDashButtonTime < doubleTapTime)
+                 DoDoubleDash();
+             _lastDashButtonTime = Time.time;
+         }
+    }
+     bool isDashPossible {
+         get {
+             return Time.time - _lastDashTime > dashWaitTime;
+         }
+     }
+        void DoDoubleDash() {
+         _lastDashTime = Time.time;
+         transform.localRotation =  Quaternion.Euler(0,0,180);
+         print("dicks");
+         // blah...
+     }
+
     private void ShipRotation(){
         float pitchDueToPosition = transform.localPosition.y * pitchFactor;
         float pitchDueToRotation = VerticalThrow*controlPitchFactor ;
