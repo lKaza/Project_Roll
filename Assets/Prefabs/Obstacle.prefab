@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4286995712564551317}
   - component: {fileID: 4286995712564551274}
   - component: {fileID: 4286995712564551275}
-  - component: {fileID: 4286995712564551316}
+  - component: {fileID: 1639946070}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4286995712564551318}
-  m_LocalRotation: {x: -0, y: 0.94424236, z: -0, w: 0.32925144}
+  m_LocalRotation: {x: 0, y: 0.9442414, z: 0, w: 0.32925394}
   m_LocalPosition: {x: 63.3, y: -78.1, z: -79.7}
   m_LocalScale: {x: 3.4767, y: 32.794, z: 100}
   m_Children: []
@@ -80,16 +80,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &4286995712564551316
-BoxCollider:
+--- !u!114 &1639946070
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4286995712564551318}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91f975a645320d4cab89a4b194f663e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
