@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityEngine;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,10 +19,17 @@ public class PlayerController : MonoBehaviour
    
    [SerializeField] float controlRollFactor = -50f;
    [SerializeField] float controlPitchFactor = -20f;
+   [SerializeField] GameObject [] guns;
 
         [Header("Particles")]
   
    float horizontalThrow,VerticalThrow;
+
+   // Must double tap within half a second (by default)
+     public float doubleTapTime = 0.5f;
+     // Time to wait between dashes
+     public float dashWaitTime = 2.0f;
+     
    private bool isAlive = true;
 
 
@@ -40,11 +48,12 @@ public class PlayerController : MonoBehaviour
         ShipMovementX();
         ShipMovementY();
         ShipRotation();
+        ShipFiring();
         }
         
     }
 
-
+    
     private void ShipRotation(){
         float pitchDueToPosition = transform.localPosition.y * pitchFactor;
         float pitchDueToRotation = VerticalThrow*controlPitchFactor ;
@@ -78,5 +87,26 @@ public class PlayerController : MonoBehaviour
         print("shit thats all you had to say negro");
         isAlive = false;
         
+    }
+    private void ShipFiring()
+    {
+        if(CrossPlatformInputManager.GetButton("Fire")){
+            ActivateGuns();
+        }else{
+            DeactivateGuns();
+        }
+    }
+
+    private void ActivateGuns()
+    {
+        foreach(GameObject gun in guns){
+            gun.SetActive(true);
+        }
+    }
+       private void DeactivateGuns()
+    {
+       foreach(GameObject gun in guns){
+           gun.SetActive(false);
+       }
     }
 }

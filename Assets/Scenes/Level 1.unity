@@ -1728,6 +1728,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerShip
       objectReference: {fileID: 0}
+    - target: {fileID: 7655009846041166004, guid: 6e33666c76117ad4fb9dd5a2d1a80f3a,
+        type: 3}
+      propertyPath: m_Name
+      value: GunLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 7655009847286284190, guid: 6e33666c76117ad4fb9dd5a2d1a80f3a,
+        type: 3}
+      propertyPath: m_Name
+      value: GunRight
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e33666c76117ad4fb9dd5a2d1a80f3a, type: 3}
 --- !u!1001 &8059700503386751681
