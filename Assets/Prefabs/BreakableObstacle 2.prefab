@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 8059700502686131131}
   m_LocalRotation: {x: 0, y: 0.7750658, z: 0, w: 0.6318805}
   m_LocalPosition: {x: 452.8, y: -128.1, z: -441.1}
-  m_LocalScale: {x: 3.4767, y: 168.03471, z: 42.42267}
+  m_LocalScale: {x: 18.574617, y: 168.03471, z: 128.28911}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4eb660b67ea55e241aa41a8027e649e1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,3 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91f975a645320d4cab89a4b194f663e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathFX: {fileID: 9061727050936679145, guid: 360e334eb3631234197d60acaa907cf8, type: 3}
+  parent: {fileID: 0}
+  scorePerEnemy: 20
+  HP: 10

@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
      // Time of the last dash
      private float _lastDashTime;
    private bool isAlive = true;
+   private bool isDoingBarrelRoll = false;
 
 
      
@@ -53,12 +54,16 @@ public class PlayerController : MonoBehaviour
         ShipRotation();
         ShipBarrelroll();
         ShipFiring();
+        
         }
         
     }
 
     private void ShipBarrelroll()
     {
+         if(isDashPossible== true){
+            isDoingBarrelRoll=false;
+         }
          if (isDashPossible && Input.GetKeyDown(KeyCode.D)) {
              // If second time pressed?
              if (Time.time - _lastDashButtonTime < doubleTapTime)
@@ -73,12 +78,14 @@ public class PlayerController : MonoBehaviour
      }
         void DoDoubleDash() {
          _lastDashTime = Time.time;
-         transform.localRotation =  Quaternion.Euler(0,0,180);
-         print("dicks");
-         // blah...
+         isDoingBarrelRoll = true;
+        
+         //todo rotar ignorando shiprotation en un tiempo
+        
      }
 
     private void ShipRotation(){
+        if(!isDoingBarrelRoll){
         float pitchDueToPosition = transform.localPosition.y * pitchFactor;
         float pitchDueToRotation = VerticalThrow*controlPitchFactor ;
 
@@ -87,6 +94,9 @@ public class PlayerController : MonoBehaviour
         float roll= horizontalThrow*controlRollFactor;
 
         transform.localRotation = Quaternion.Euler(pitch,yaw,roll);
+        }else{
+            return;
+        }
     }
 
     private void ShipMovementX()
