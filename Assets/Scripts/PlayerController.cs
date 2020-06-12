@@ -36,6 +36,11 @@ public class PlayerController : MonoBehaviour
    private bool isAlive = true;
    private bool isDoingBarrelRoll = false;
 
+    float pitchDueToPosition;
+    float pitchDueToRotation;
+    float pitch;
+    float yaw;
+    float roll;
 
      
     // Start is called before the first frame update
@@ -52,50 +57,35 @@ public class PlayerController : MonoBehaviour
         ShipMovementX();
         ShipMovementY();
         ShipRotation();
-        ShipBarrelroll();
         ShipFiring();
         
         }
         
     }
 
-    private void ShipBarrelroll()
-    {
-         if(isDashPossible== true){
-            isDoingBarrelRoll=false;
-         }
-         if (isDashPossible && Input.GetKeyDown(KeyCode.D)) {
-             // If second time pressed?
-             if (Time.time - _lastDashButtonTime < doubleTapTime)
-                 DoDoubleDash();
-             _lastDashButtonTime = Time.time;
-         }
-    }
-     bool isDashPossible {
-         get {
-             return Time.time - _lastDashTime > dashWaitTime;
-         }
-     }
-        void DoDoubleDash() {
-         _lastDashTime = Time.time;
-         isDoingBarrelRoll = true;
-        
-         //todo rotar ignorando shiprotation en un tiempo
-        
-     }
 
     private void ShipRotation(){
+         pitchDueToPosition = transform.localPosition.y * pitchFactor;
+         pitchDueToRotation = VerticalThrow * controlPitchFactor;
+         pitch = pitchDueToPosition + pitchDueToRotation;
+         yaw = transform.localPosition.x * yawFactor;
+         roll = horizontalThrow * controlRollFactor;
+         
+        if (isDashPossible == true)
+        {
+            isDoingBarrelRoll = false;
+        }
         if(!isDoingBarrelRoll){
-        float pitchDueToPosition = transform.localPosition.y * pitchFactor;
-        float pitchDueToRotation = VerticalThrow*controlPitchFactor ;
-
-        float pitch= pitchDueToPosition + pitchDueToRotation;
-        float yaw= transform.localPosition.x * yawFactor;
-        float roll= horizontalThrow*controlRollFactor;
-
         transform.localRotation = Quaternion.Euler(pitch,yaw,roll);
-        }else{
-            return;
+        }
+        if (isDashPossible && Input.GetKeyDown(KeyCode.D))
+        {
+            DoDoubleDash(true);
+        }
+        //false for left
+        if (isDashPossible && Input.GetKeyDown(KeyCode.A))
+        {
+            DoDoubleDash(false);
         }
     }
 
@@ -118,29 +108,133 @@ public class PlayerController : MonoBehaviour
         transform.localPosition = new Vector3(transform.localPosition.x, ClampedPosY, transform.localPosition.z);
     }
     public void Dying(){
-        print("shit thats all you had to say negro");
+       
         isAlive = false;
         
     }
     private void ShipFiring()
     {
         if(CrossPlatformInputManager.GetButton("Fire")){
-            ActivateGuns();
+            SetGunsActive(true);
         }else{
-            DeactivateGuns();
+            SetGunsActive(false);
         }
     }
 
-    private void ActivateGuns()
+    private void SetGunsActive(bool isActive)
     {
         foreach(GameObject gun in guns){
-            gun.SetActive(true);
+            var gunFX = gun.GetComponent<ParticleSystem>().emission;
+            gunFX.enabled = isActive;
         }
     }
-       private void DeactivateGuns()
+
+
+    //codigo experimental necesita arreglos
+
+    private void ShipBarrelroll()
     {
-       foreach(GameObject gun in guns){
-           gun.SetActive(false);
-       }
+        
+        //true for right     
+      
     }
+
+
+
+    public bool isDashPossible
+    {
+        get
+        {
+            return Time.time - _lastDashTime > dashWaitTime;
+        }
+    }
+
+
+    void DoDoubleDash(bool Side)
+    {
+
+        // If second time pressed?
+        if (Time.time - _lastDashButtonTime < doubleTapTime)
+        {
+            _lastDashTime = Time.time;
+            isDoingBarrelRoll = true;
+            var rotation = transform.localEulerAngles;
+            StartRotate(rotation, Side);
+        }
+
+        _lastDashButtonTime = Time.time;
+
+    }
+
+    // Rotate the object from it's current rotation to "newRotation" over "duration" seconds
+    void StartRotate(Vector3 newRotation,bool side, float duration = 0.3f)
+    {
+
+        if (SlerpRotation != null) // if the rotate coroutine is currently running, so let's stop it and begin rotating to the new rotation.
+            StopCoroutine(SlerpRotation);
+        
+        SlerpRotation = Rotate(newRotation,side, duration);       
+        StartCoroutine(SlerpRotation);
+    }
+
+    IEnumerator SlerpRotation = null;
+    IEnumerator Rotate(Vector3 newRotation,bool side, float duration)
+    {
+        Vector3 PitchAndYaw = new Vector3(pitch,yaw,0f);
+        float rotationside;
+        if(side){
+            rotationside = 180f;
+        }else{
+            rotationside =-180f;
+        }
+        //Quaternion startRotation = transform.rotation; // You need to cache the current rotation so that you aren't slerping from the updated rotation each time
+        //Quaternion endRotation = Quaternion.Euler(newRotation);
+        Vector3 initialRotation = transform.localRotation.eulerAngles;
+        Vector3 goalRotation = initialRotation;
+
+        goalRotation.z -= rotationside;
+
+        Vector3 currentRotation = initialRotation;
+        currentRotation += new Vector3(0f,yaw,0f);
+        //first half of the loop
+        for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
+        {
+            float t = elapsed / duration; // This is the normalized time. It will move from 0 to 1 over the duration of the loop.
+            print("memito0" + currentRotation);
+            
+            print("memito1"+currentRotation);
+            currentRotation.z = Mathf.Lerp(initialRotation.z, goalRotation.z, t);
+            transform.rotation = Quaternion.Euler(currentRotation);
+            yield return null;
+        }
+        //update data with the end of first loop due Euler
+        initialRotation = transform.rotation.eulerAngles;
+        goalRotation = initialRotation;
+        goalRotation.z -= rotationside;
+
+        //second half of the loop
+        for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
+        {
+            float t = elapsed / duration; // This is the normalized time. It will move from 0 to 1 over the duration of the loop.
+            
+            currentRotation.z = Mathf.Lerp(initialRotation.z, goalRotation.z, t);
+            transform.rotation = Quaternion.Euler(currentRotation);
+            yield return null;
+        }
+
+        //transform.rotation = endRotation; // finally, set the rotation to the end rotation
+        SlerpRotation = null; // Clear out the IEnumerator variable so we can tell that the coroutine has ended.
+    }
+
+
+    
+
+
+
+
+
+
+
+
+
 }
